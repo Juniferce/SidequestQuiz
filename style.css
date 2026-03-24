@@ -1,0 +1,171 @@
+/* 1. GLOBAL RESET & ALIGNMENT */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    /* Gradient side margins */
+    background: linear-gradient(90deg, #1a1a1a 0%, #000 15%, #000 85%, #1a1a1a 100%);
+    background-attachment: fixed;
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    margin: 0 auto !important; /* Centering the black content area */
+    padding: 0 !important;
+    max-width: 1400px; /* Adjust to control how wide the black center is */
+    min-height: 100vh;
+    background-color: #000;
+    color: #fff !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* 2. HEADER & NAVIGATION */
+header {
+    width: 100%;
+    max-width: 1400px;
+    position: absolute;
+    top: 0 !important;
+    left: 50%;
+    transform: translateX(-50%); /* Centers absolute header within the body */
+    z-index: 1000;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px 0;
+}
+
+/* 3. NAV ITEMS (TABS) */
+.nav-item {
+    position: relative;
+    text-decoration: none !important;
+    color: #fff !important;
+    width: 120px;
+    /* Height calculation for proximity effect */
+    height: calc(55px + (var(--prox, 0) * 45px));
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 8px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    background: #111;
+}
+
+/* Layers: Image -> Glass -> Text */
+.tab-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important; /* Touches all edges */
+    z-index: 0;
+    opacity: 0.4;
+    transition: opacity 0.3s;
+}
+
+.inner-bg {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(4px);
+    z-index: 1;
+}
+
+.glow-border {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.tab-text {
+    position: relative;
+    z-index: 10;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    text-shadow: 0 2px 8px rgba(0,0,0,1);
+    pointer-events: none;
+}
+
+.nav-item:hover .tab-image {
+    opacity: 0.8;
+}
+
+/* 4. CONTENT LAYOUT */
+main {
+    padding-top: 130px; /* Prevents title from being hidden under nav */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/* 5. HOMEPAGE HERO (Overrides main padding) */
+.home-hero {
+    padding-top: 0 !important;
+    height: 100vh;
+    justify-content: flex-end;
+    padding-bottom: 80px;
+    text-align: center;
+}
+
+.cursive-name {
+    font-family: "Snell Roundhand", "Apple Chancery", "Segoe Script", "Lucida Handwriting", cursive;
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-style: italic;
+    font-weight: 200;
+    margin: 0;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(255,255,255,0.3);
+}
+
+.alias-text {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.5);
+    margin-top: 5px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+/* 6. BACKGROUND ELEMENTS */
+.bg-static {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% 10%, #2a2a2a 0%, #000 100%);
+    z-index: -1;
+}
+
+.bg-slideshow {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-color: #111;
+}
+
+.bg-slideshow::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 1;
+}
+
+/* 7. MOBILE RESPONSIVENESS */
+@media (max-width: 768px) {
+    nav { gap: 8px; padding: 10px; flex-wrap: wrap; }
+    .nav-item { width: 90px; height: 60px !important; }
+    .tab-text { font-size: 8px; }
+}

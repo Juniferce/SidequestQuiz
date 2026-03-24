@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONTACT ME</title>
+</head>
+<body>
+
+    <div class="bg-static"></div>
+
+    <header>
+        <nav id="nav-container">
+            <a href="multimedia.html" class="nav-item">
+                <div class="glow-border"></div><div class="inner-bg"></div>
+                <img src="https://placehold.co/400x400/222/FFF?text=Media" class="tab-image" alt="Multimedia">
+                <span class="tab-text">MULTIMEDIA</span>
+            </a>
+            <a href="gamedev.html" class="nav-item">
+                <div class="glow-border"></div><div class="inner-bg"></div>
+                <img src="https://placehold.co/400x400/222/FFF?text=Code" class="tab-image" alt="Game Dev">
+                <span class="tab-text">GAME DEV</span>
+            </a>
+            <a href="future.html" class="nav-item">
+                <div class="glow-border"></div><div class="inner-bg"></div>
+                <img src="https://placehold.co/400x400/222/FFF?text=Future" class="tab-image" alt="Future">
+                <span class="tab-text">FUTURE</span>
+            </a>
+            <a href="ttrpgs.html" class="nav-item">
+                <div class="glow-border"></div><div class="inner-bg"></div>
+                <img src="https://placehold.co/400x400/222/FFF?text=Dice" class="tab-image" alt="TTRPGS">
+                <span class="tab-text">TTRPGS</span>
+            </a>
+            <a href="index.html" class="nav-item primary">
+                <div class="glow-border"></div><div class="inner-bg"></div>
+                <img src="https://placehold.co/400x400/511/FFF?text=Return" class="tab-image" alt="Go Back">
+                <span class="tab-text">↩ GO BACK</span>
+            </a>
+        </nav>
+    </header>
+
+    <main>
+        <h1 class="title-text">CONTACTS</h1>
+        <div class="video-block" id="contact-box" style="padding: 30px; max-width: 600px; text-align: left; transition: filter 0.5s ease, opacity 0.5s ease;">
+            <p style="margin-top: 0; color: #ccc;">Let's build something together, Carter Till.</p>
+            
+            <div style="margin-bottom: 25px;">
+                <p><strong>Email:</strong> <a href="mailto:carter.till@bsu.edu" style="color: #fff; text-decoration: none; border-bottom: 1px dotted #ccc;">carter.till@bsu.edu</a></p>
+                <p style="line-height: 1.8;">
+                    <strong>Network:</strong> <br>
+                    <a href="https://www.instagram.com/juniferce" target="_blank" style="color: #91c1e3; text-decoration: none; margin-right: 15px;">Instagram (@juniferce)</a>
+                    <a href="https://steamcommunity.com/profiles/76561199016225430/" target="_blank" style="color: #91c1e3; text-decoration: none; margin-right: 15px;">Steam (Juniferce)</a>
+                    <span style="color: #91c1e3; margin-right: 15px;">Discord: Juniferce</span>
+                </p>
+            </div>
+
+            <form id="fake-form" style="display: flex; flex-direction: column; gap: 15px;">
+                <input type="text" required placeholder="Your Name" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: #fff; font-size: 16px; box-sizing: border-box; transition: opacity 0.4s;">
+                <input type="email" required placeholder="Your Email" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: #fff; font-size: 16px; box-sizing: border-box; transition: opacity 0.4s;">
+                <textarea rows="5" required placeholder="Your Message" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: #fff; font-size: 16px; box-sizing: border-box; resize: vertical; transition: opacity 0.4s;"></textarea>
+                <button type="button" onclick="animateSubmit(this)" style="padding: 15px; border-radius: 8px; border: none; background: #fff; color: #000; font-weight: bold; font-size: 16px; cursor: pointer; transition: all 0.4s ease;">SEND MESSAGE</button>
+            </form>
+        </div>
+
+        <script>
+            function animateSubmit(btn) {
+                const box = document.getElementById('contact-box');
+                const form = document.getElementById('fake-form');
+                const inputs = form.querySelectorAll('input, textarea');
+                
+                // 1. Grey out & lock the form (The "Sending" Tween)
+                box.style.filter = 'grayscale(100%) brightness(0.6)';
+                btn.innerText = 'SENDING...';
+                btn.style.pointerEvents = 'none';
+                inputs.forEach(i => { i.disabled = true; i.style.opacity = '0.5'; });
+
+                // 2. Flash to success state
+                setTimeout(() => {
+                    box.style.filter = 'grayscale(0%) brightness(1.1)';
+                    btn.style.background = '#91c1e3';
+                    btn.innerText = 'MESSAGE SENT!';
+                    
+                    // 3. Reset everything back to normal so they can "send" again
+                    setTimeout(() => {
+                        box.style.filter = 'grayscale(0%) brightness(1)';
+                        btn.style.background = '#fff';
+                        btn.innerText = 'SEND MESSAGE';
+                        btn.style.pointerEvents = 'auto';
+                        form.reset();
+                        inputs.forEach(i => { i.disabled = false; i.style.opacity = '1'; });
+                    }, 3000); 
+                }, 1500); 
+            }
+        </script>
+    </main>
+
+</body>
+</html>
