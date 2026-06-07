@@ -20,6 +20,23 @@
             display: none;
         }
 
+                /* --- Tap-to-Place Mobile States --- */
+        .selected-for-move {
+            background-color: #243342 !important;
+            color: #fdf8e4 !important;
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            border-color: #243342 !important;
+            z-index: 10;
+        }
+        
+        /* Subtle highlight for valid destinations when an item is selected */
+        body.is-moving .drop-zone, body.is-moving .number-bank {
+            background-color: rgba(36, 51, 66, 0.08);
+            border-color: rgba(36, 51, 66, 0.6);
+            cursor: pointer;
+        }
+        
         body {
             /* Dark, rich mahogany table texture */
             background-image: linear-gradient(rgba(18, 11, 6, 0.92), rgba(18, 11, 6, 0.92)), url('https://www.transparenttextures.com/patterns/wood-pattern.png');
@@ -512,6 +529,67 @@
             if(turb) turb.setAttribute('seed', Math.random() * 100);
         }, 130);
 
+        let selectedDragNode = null;
+
+        // Tapping a number
+        window.handleTapSelect = function(el, ev) {
+            ev.stopPropagation(); // Stops the drop zone underneath from stealing the click
+        
+            // If you have a number selected, and tap a different number already sitting in a slot, replace it
+            if (selectedDragNode && selectedDragNode !== el && el.parentElement.classList.contains('drop-zone')) {
+                window.handleTapDrop(el.parentElement);
+                return;
+            }
+        
+            // Clear previous selection
+            if (selectedDragNode) {
+                selectedDragNode.classList.remove('selected-for-move');
+                document.body.classList.remove('is-moving');
+            }
+        
+            // Tapping the same number just turns it off
+            if (selectedDragNode === el) {
+                selectedDragNode = null;
+                return; 
+            }
+        
+            // Lock in new selection
+            selectedDragNode = el;
+            el.classList.add('selected-for-move');
+            document.body.classList.add('is-moving');
+        };
+        
+        // Tapping a destination (Bank or Drop Zone)
+        window.handleTapDrop = function(targetElement) {
+            if (!selectedDragNode) return;
+        
+            const parentSlip = targetElement.closest('.paper-slip');
+            const localBank = parentSlip.querySelector('.number-bank');
+        
+            // Prevent moving numbers to a completely different question
+            if (!parentSlip.contains(selectedDragNode)) {
+                selectedDragNode.classList.remove('selected-for-move');
+                document.body.classList.remove('is-moving');
+                selectedDragNode = null;
+                return;
+            }
+        
+            if (targetElement.classList.contains('drop-zone')) {
+                // If a number is already in this slot, kick it back to the bank
+                if (targetElement.children.length > 0) {
+                    localBank.appendChild(targetElement.children[0]);
+                }
+                targetElement.appendChild(selectedDragNode);
+            } else if (targetElement.classList.contains('number-bank')) {
+                targetElement.appendChild(selectedDragNode);
+            }
+        
+            // Clean up visuals after placing
+            selectedDragNode.classList.remove('selected-for-move');
+            document.body.classList.remove('is-moving');
+            selectedDragNode = null;
+        };
+        
         window.allowDrop = function(ev) { ev.preventDefault(); };
         window.drag = function(ev) { ev.dataTransfer.setData("text", ev.target.id); };
         window.drop = function(ev, targetElement) {
@@ -666,17 +744,17 @@
                 } else if (q.type === 'ranked') {
                     contentHTML += `
                         <div class="rank-container">
-                            <div class="number-bank" ondragover="allowDrop(event)" ondrop="drop(event, this)">
+                            <div class="number-bank" ondragover="allowDrop(event)" ondrop="drop(event, this)" onclick="handleTapDrop(this)">
                     `;
                     q.options.forEach((_, i) => {
-                        contentHTML += `<div class="draggable-num" draggable="true" id="drag-${index}-${i}" ondragstart="drag(event)" data-val="${i + 1}">${i + 1}</div>`;
+                        contentHTML += `<div class="draggable-num" draggable="true" id="drag-${index}-${i}" ondragstart="drag(event)" data-val="${i + 1}" onclick="handleTapSelect(this, event)">${i + 1}</div>`;
                     });
                     
                     contentHTML += `</div><div class="rank-options">`;
                     q.options.forEach((opt, i) => {
                         contentHTML += `
                             <div class="rank-row">
-                                <div class="drop-zone" id="zone-${index}-${i}" ondragover="allowDrop(event)" ondrop="drop(event, this)"></div>
+                                <div class="drop-zone" id="zone-${index}-${i}" ondragover="allowDrop(event)" ondrop="drop(event, this)" onclick="handleTapDrop(this)"></div>
                                 <label>${opt}</label>
                             </div>
                         `;
